@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 
+from db_models import OrderModel
+
 
 class Order(BaseModel):
     stocks: str
@@ -7,8 +9,18 @@ class Order(BaseModel):
 
 
 class OrderResponse(BaseModel):
+    id: int
     stocks: str
     quantity: int
+    status: OrderModel.OrderStatus
+
+    class Config:
+        from_attributes = True
+
+
+class CreateOrderResponse(BaseModel):
+    id: int
+    status: OrderModel.OrderStatus
 
     class Config:
         from_attributes = True

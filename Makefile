@@ -64,10 +64,10 @@ endif
 ## ------------------------------------------------ APP ----------------------------------------------------------------
 
 ## @App Start the db.
-start:
-	docker-compose up
-	#docker-compose up --detach
-#	python trader/main.py
+start: stop
+	docker-compose up --detach && sleep 3
+	alembic upgrade head
+	python trader/main.py
 
 stop:
 	docker-compose kill && \

@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, WebSocket
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,10 +8,11 @@ from sqlalchemy.future import select
 
 from db import get_db
 from db_models import OrderModel
-from models import Order, OrderResponse
+from models import CreateOrderResponse, Order, OrderResponse
 
 router = APIRouter()
 
+ws_clients: list[WebSocket] = []
 
 @router.get('/ping')
 async def ping() -> str:
@@ -28,7 +29,7 @@ async def ping() -> str:
 )
 async def get_orders(db: AsyncSession = Depends(get_db)) -> list[OrderResponse]:
     """Get all orders"""
-    result = await db.execute(select(OrderModel).where(OrderModel.status != OrderModel.OrderStatus.CANCELED))
+    result = await db.execute(select(OrderModel))
     orders = result.scalars().all()
 
     return [OrderResponse.model_validate(order) for order in orders]
@@ -37,13 +38,13 @@ async def get_orders(db: AsyncSession = Depends(get_db)) -> list[OrderResponse]:
 @router.post(
     '/orders',
     status_code=HTTPStatus.CREATED,
-    response_model=OrderResponse,
+    response_model=CreateOrderResponse,
     responses={
         201: {'description': 'Order placed'},
         400: {'description': 'Invalid input'},
     },
 )
-async def create_order(order: Order, db: AsyncSession = Depends(get_db)) -> OrderResponse | JSONResponse:
+async def create_order(order: Order, db: AsyncSession = Depends(get_db)) -> CreateOrderResponse | JSONResponse:
     """Create a new order"""
     try:
         db_order = OrderModel(stocks=order.stocks, quantity=order.quantity, status=OrderModel.OrderStatus.PENDING)
@@ -83,14 +84,17 @@ async def get_order(order_id: int, db: AsyncSession = Depends(get_db)) -> OrderR
         404: {'description': 'Order not found'},
     },
 )
-async def delete_order(order_id: int, db: AsyncSession = Depends(get_db)) -> None:  # pylint: disable=unused-argument
+async def delete_order(order_id: int, db: AsyncSession = Depends(get_db)) -> None:
     """Cancel an order by id"""
     try:
         order = await db.get(OrderModel, order_id)
         if not order:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f'Order {order_id} not found!')
 
-        order.status = OrderModel.OrderStatus.CANCELED
+        if order.status != OrderModel.OrderStatus.PENDING:
+            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f'Order {order_id} cannot be cancelled!')
+
+        order.status = OrderModel.OrderStatus.CANCELLED
         await db.refresh(order)
     except ValueError as e:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e

@@ -6,8 +6,8 @@ from routes import router
 app = FastAPI()
 
 # Add custom middleware
-app.add_middleware(ValidationErrorMiddleware)  # type: ignore
-app.add_middleware(DelayMiddleware)  # type: ignore
+app.add_middleware(ValidationErrorMiddleware)
+app.add_middleware(DelayMiddleware)
 
 # Register the router
 app.include_router(router)
