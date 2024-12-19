@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from db_models import OrderModel
 
 
-class Order(BaseModel):
+class OrderInput(BaseModel):
     stocks: str
     quantity: int = Field(ge=0, description='The quantity must be more than 0.')
 

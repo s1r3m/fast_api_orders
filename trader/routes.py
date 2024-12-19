@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, WebSocket
+from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,11 +8,11 @@ from sqlalchemy.future import select
 
 from db import get_db
 from db_models import OrderModel
-from models import CreateOrderResponse, Order, OrderResponse
+from models import CreateOrderResponse, OrderInput, OrderResponse
+from web_socket import broadcast_order_status_update
 
 router = APIRouter()
 
-ws_clients: list[WebSocket] = []
 
 @router.get('/ping')
 async def ping() -> str:
@@ -44,16 +44,15 @@ async def get_orders(db: AsyncSession = Depends(get_db)) -> list[OrderResponse]:
         400: {'description': 'Invalid input'},
     },
 )
-async def create_order(order: Order, db: AsyncSession = Depends(get_db)) -> CreateOrderResponse | JSONResponse:
+async def create_order(order: OrderInput, db: AsyncSession = Depends(get_db)) -> CreateOrderResponse | JSONResponse:
     """Create a new order"""
-    try:
-        db_order = OrderModel(stocks=order.stocks, quantity=order.quantity, status=OrderModel.OrderStatus.PENDING)
-        db.add(db_order)
-        await db.commit()
+    db_order = OrderModel(stocks=order.stocks, quantity=order.quantity, status=OrderModel.OrderStatus.PENDING)
+    db.add(db_order)
+    await db.commit()
 
-        return OrderResponse.model_validate(db_order)
-    except ValueError as e:
-        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content=str(e))
+    await broadcast_order_status_update(db_order)  # A new order was created
+
+    return OrderResponse.model_validate(db_order)
 
 
 @router.get(
@@ -66,14 +65,11 @@ async def create_order(order: Order, db: AsyncSession = Depends(get_db)) -> Crea
 )
 async def get_order(order_id: int, db: AsyncSession = Depends(get_db)) -> OrderResponse | JSONResponse:
     """Get an order by id"""
-    try:
-        order = await db.get(OrderModel, order_id)
-        if not order:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f'Order {order_id} not found!')
+    order = await db.get(OrderModel, order_id)
+    if not order:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f'Order {order_id} not found!')
 
-        return OrderResponse.model_validate(order)
-    except ValueError as e:
-        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content=str(e))
+    return OrderResponse.model_validate(order)
 
 
 @router.delete(
@@ -86,15 +82,14 @@ async def get_order(order_id: int, db: AsyncSession = Depends(get_db)) -> OrderR
 )
 async def delete_order(order_id: int, db: AsyncSession = Depends(get_db)) -> None:
     """Cancel an order by id"""
-    try:
-        order = await db.get(OrderModel, order_id)
-        if not order:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f'Order {order_id} not found!')
+    order = await db.get(OrderModel, order_id)
+    if not order:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail=f'Order {order_id} not found!')
 
-        if order.status != OrderModel.OrderStatus.PENDING:
-            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f'Order {order_id} cannot be cancelled!')
+    if order.status != OrderModel.OrderStatus.PENDING:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f'Order {order_id} cannot be cancelled!')
 
-        order.status = OrderModel.OrderStatus.CANCELLED
-        await db.refresh(order)
-    except ValueError as e:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
+    order.status = OrderModel.OrderStatus.CANCELLED
+    await db.refresh(order)
+
+    await broadcast_order_status_update(order)  # Status updates
