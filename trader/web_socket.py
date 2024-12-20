@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from db_models import OrderModel
+from db import OrderModel
 
 active_connections: List[WebSocket] = []
 
@@ -21,8 +21,8 @@ async def websocket_endpoint(websocket: WebSocket) -> None:
         active_connections.remove(websocket)
 
 
-async def broadcast_order_status_update(order: OrderModel) -> None:
+async def broadcast_order_status_update(order_id: int, status: OrderModel.OrderStatus) -> None:
     """Broadcast order status updates to all connected WebSocket clients"""
-    message = f'Order {order.id} status updated to {order.status}'
+    message = f'Order {order_id} status updated to {status}'
     for connection in active_connections:
         await connection.send_text(message)
