@@ -1,0 +1,12 @@
+services:
+  tests:
+    build:
+      context: ./../
+      dockerfile: docker/app/Dockerfile
+    volumes:
+      - ./
+    environment:
+      - APP_HOST=http://app.dev.local
+      - DATABASE_URL=postgresql://trader:trader@db/trader
+    ports:
+      - "80:80"

@@ -14,10 +14,8 @@ WHEEL_VERSION = 0.38.4
 
 # Paths.
 PROJECT_PATH = $(CURDIR)
-APP_PATH = $(PROJECT_PATH)/trader
-DOCKER_FOLDER = $(PROJECT_PATH)/qa/docker
 
-export VIRTUAL_ENV ?= $(PROJECT_PATH)/.venv_$(PYTHON)
+export VIRTUAL_ENV ?= $(PROJECT_PATH)/.venv_at_$(PYTHON)
 VIRTUAL_ENV_POETRY = $(PROJECT_PATH)/.venv_poetry
 
 # Bin.
@@ -29,7 +27,6 @@ SHELL = /bin/bash  # Using bash as default shell
 CHECK_PYTHON = $(shell which $(PYTHON))
 
 export PATH := $(VIRTUAL_ENV)/bin:$(PATH)
-export PYTHONPATH = $(PROJECT_PATH)/trader
 
 all: help
 
@@ -63,31 +60,40 @@ endif
 
 ## ------------------------------------------------ APP ----------------------------------------------------------------
 
-## @App Start db and the app.
+## @App Start the app.
 start: stop
-	docker-compose up --detach && sleep 3
-	alembic -C $(PROJECT_PATH)/migrations/alembic.ini upgrade head
-	python trader/main.py
+	rm -rf $(PROJECT_PATH)/docker/app_logs && mkdir -p $(PROJECT_PATH)/docker/app_logs
+	cd $(PROJECT_PATH)/docker        && \
+		docker-compose build --pull  && \
+		docker-compose up
 
+## @App Stop the app.
 stop:
-	docker-compose kill && \
-	docker-compose down --volumes
+	cd $(PROJECT_PATH)/docker && \
+		docker-compose kill   && \
+		docker-compose down --volumes
 
+## @App SSH to the app's container.
+in:
+	docker exec -it docker-app-1 bash
+
+## ------------------------------------------------ TESTS --------------------------------------------------------------
 
 ## @Tests Run linters.
 lint: $(VENV_ACTIVATE)
-	black --check --diff --color $(APP_PATH)
-	pylint $(APP_PATH)
-	mypy $(APP_PATH)
+	black --check --diff --color $(PROJECT_PATH)
+	pylint $(PROJECT_PATH)/tests $(PROJECT_PATH)/trader_qa $(PROJECT_PATH)/settings.py
+	mypy $(PROJECT_PATH)
 
 ## @Tests Format the code.
 style: $(VENV_ACTIVATE)
-	black $(APP_PATH)
+	black $(PROJECT_PATH)/qa
 
-## @Tests Run unittests.
+## @Tests Run autotests.
 test: $(VENV_ACTIVATE)
-	# Here goes unittests if needed.
-	# pytest tests
+	cd $(PROJECT_PATH)/docker        && \
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests
 
 HELP_TARGET_MAX_CHAR_NUM = 20
 
