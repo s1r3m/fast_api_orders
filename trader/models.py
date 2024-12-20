@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from db_models import OrderModel
+from db import OrderModel
 
 
 class OrderInput(BaseModel):
