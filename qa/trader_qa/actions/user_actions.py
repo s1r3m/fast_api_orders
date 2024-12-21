@@ -31,3 +31,7 @@ class UserActions(BaseActions):
         order.status = OrderStatus.CANCELLED
 
         return response
+
+    @allure.step
+    def get_all_orders(self) -> Response:
+        return self._clients.api.get_orders()

@@ -79,3 +79,11 @@ class ApiClient:
             url=f'/orders/{order_id}',
         )
         return self._call(request, HTTPStatus.NO_CONTENT)
+
+    @allure.step
+    def get_orders(self) -> Response:
+        request = Request(
+            method='GET',
+            url='/orders',
+        )
+        return self._call(request, HTTPStatus.OK)
