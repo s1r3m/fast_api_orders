@@ -13,10 +13,10 @@ SETUPTOOLS_VERSION = 65.6.3
 WHEEL_VERSION = 0.38.4
 
 # Paths.
-PROJECT_PATH = $(CURDIR)
+PROJECT_PATH = $(shell dirname $(CURDIR))
 
 export VIRTUAL_ENV ?= $(PROJECT_PATH)/.venv_at_$(PYTHON)
-VIRTUAL_ENV_POETRY = $(PROJECT_PATH)/.venv_poetry
+VIRTUAL_ENV_POETRY = $(PROJECT_PATH)/.venv_at_poetry
 
 # Bin.
 VENV_ACTIVATE = $(VIRTUAL_ENV)/bin/activate
@@ -62,16 +62,15 @@ endif
 
 ## @App Start the app.
 start: stop
-	rm -rf $(PROJECT_PATH)/docker/app_logs && mkdir -p $(PROJECT_PATH)/docker/app_logs
-	cd $(PROJECT_PATH)/docker        && \
+	cd $(PROJECT_PATH)/qa/docker        && \
 		docker-compose build --pull  && \
 		docker-compose up
 
 ## @App Stop the app.
 stop:
-	cd $(PROJECT_PATH)/docker && \
-		docker-compose kill   && \
-		docker-compose down --volumes
+	cd $(PROJECT_PATH)/qa/docker && \
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml kill   && \
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml down --volumes
 
 ## @App SSH to the app's container.
 in:
@@ -81,17 +80,17 @@ in:
 
 ## @Tests Run linters.
 lint: $(VENV_ACTIVATE)
-	black --check --diff --color $(PROJECT_PATH)
-	pylint $(PROJECT_PATH)/tests $(PROJECT_PATH)/trader_qa $(PROJECT_PATH)/settings.py
-	mypy $(PROJECT_PATH)
+	black --check --diff --color $(PROJECT_PATH)/qa
+	pylint $(PROJECT_PATH)/qa/tests $(PROJECT_PATH)/qa/trader_qa $(PROJECT_PATH)/qa/settings.py
+	mypy $(PROJECT_PATH)/qa/
 
 ## @Tests Format the code.
 style: $(VENV_ACTIVATE)
 	black $(PROJECT_PATH)/qa
 
 ## @Tests Run autotests.
-test: $(VENV_ACTIVATE)
-	cd $(PROJECT_PATH)/docker        && \
+tests: $(VENV_ACTIVATE)
+	cd $(PROJECT_PATH)/qa/docker        && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests
 
