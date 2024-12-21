@@ -31,7 +31,12 @@ xfail_strict = true
 filterwarnings = [
     'ignore::Warning',
 ]
-addopts = '--tb=short -vv'
+addopts = [
+    "--tb=short",
+    "-vv",
+    "--alluredir", "qa/allure-results",
+    "--clean-alluredir"
+]
 
 [tool.mypy]
 python_version = "3.10"
