@@ -14,11 +14,11 @@ services:
     command: |
       sh -c "
         timeout 10s bash -c '
-        until curl -f http://app/ping; do
+        until curl -fs http://app/ping; do
           echo Waiting for app...;
           sleep 1;
         done;
-        echo \nApp is ready. Starting tests...;
+        echo App is ready. Starting tests...;
         ' || (echo Timeout reached! App is not ready.; exit 1)
         ./start_tests.sh
       "
