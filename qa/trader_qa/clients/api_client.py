@@ -53,3 +53,29 @@ class ApiClient:
             url='/ping',
         )
         return self._call(request, HTTPStatus.OK)
+
+    @allure.step
+    def post_order(self, stocks: str, quantity: int) -> Response:
+        request = Request(
+            method='POST',
+            url='/orders',
+            json={'stocks': stocks, 'quantity': quantity},
+            headers={'Content-Type': 'application/json'},
+        )
+        return self._call(request, HTTPStatus.CREATED)
+
+    @allure.step
+    def get_order(self, order_id: int) -> Response:
+        request = Request(
+            method='GET',
+            url=f'/orders/{order_id}',
+        )
+        return self._call(request, HTTPStatus.OK)
+
+    @allure.step
+    def delete_order(self, order_id: int) -> Response:
+        request = Request(
+            method='DELETE',
+            url=f'/orders/{order_id}',
+        )
+        return self._call(request, HTTPStatus.NO_CONTENT)

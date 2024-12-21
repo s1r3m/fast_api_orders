@@ -89,7 +89,7 @@ style: $(VENV_ACTIVATE)
 	black $(PROJECT_PATH)/qa
 
 ## @Tests Run autotests.
-tests: $(VENV_ACTIVATE)
+test: $(VENV_ACTIVATE)
 	cd $(PROJECT_PATH)/qa/docker        && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests

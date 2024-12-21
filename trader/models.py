@@ -5,7 +5,7 @@ from db import OrderModel
 
 class OrderInput(BaseModel):
     stocks: str
-    quantity: int = Field(ge=0, description='The quantity must be more than 0.')
+    quantity: int = Field(gt=0, description='The quantity must be more than 0.')
 
 
 class OrderResponse(BaseModel):
