@@ -1,6 +1,8 @@
 # IntelliJ project files
 .idea
 
+allure-report/
+
 .pytest_cache/
 __pycache__/
 

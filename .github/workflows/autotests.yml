@@ -1,0 +1,40 @@
+name: Run autotests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: KengoTODA/actions-setup-docker-compose@v1
+      with:
+        version: '2.28.1' # the full version of `docker-compose` command
+    - name: Run autotests
+      run: make -C qa test
+    - name: Clean up
+      if: always()
+      run: make -C qa stop
+
+#    - name: Load test report history
+#      uses: actions/checkout@v3
+#      if: always()
+#      continue-on-error: true
+#      with:
+#        ref: develop
+#        path: develop
+#    - name: Build test report
+#      uses: simple-elf/allure-report-action@v1.7
+#      if: always()
+#      with:
+#        gh_pages: develop
+#        allure_history: allure-history
+#        allure_results: allure-results
+#
+#    - name: Publish test report
+#      uses: peaceiris/actions-gh-pages@v3
+#      if: always()
+#      with:
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#        publish_branch: develop
+#        publish_dir: allure-history
