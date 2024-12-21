@@ -1,0 +1,13 @@
+# IntelliJ project files
+.idea
+
+.pytest_cache/
+__pycache__/
+
+# Environments
+.venv*
+
+# mypy
+.mypy_cache/
+
+sandbox*

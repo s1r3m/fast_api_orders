@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: ./../../
+      dockerfile: qa/docker/app/Dockerfile
+    volumes:
+      - ./../../migrations:/migrations/
+      - ./../../trader:/trader/
+      - ./app/nginx.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://trader:trader@db/trader
+      - ORDER_EXECUTE_DELAY=1  # To speed up the tests
+    ports:
+      - "80:80"
+    networks:
+      default:
+        aliases:
+          - app.dev.local
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: trader
+      POSTGRES_DB: trader
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:

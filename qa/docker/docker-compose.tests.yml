@@ -1,0 +1,24 @@
+services:
+  tests:
+    build:
+      context: ./../
+      dockerfile: docker/tests/Dockerfile
+    depends_on:
+      - app
+      - db
+    environment:
+      - APP_HOST=http://app.dev.local
+      - DATABASE_URL=postgresql://trader:trader@db/trader
+    ports:
+      - "80:80"
+    command: |
+      sh -c "
+        timeout 10s bash -c '
+        until curl -f http://app/ping; do
+          echo Waiting for app...;
+          sleep 1;
+        done;
+        echo \nApp is ready. Starting tests...;
+        ./start_tests.sh
+        ' || (echo Timeout reached! App is not ready.; exit 1)
+      "
