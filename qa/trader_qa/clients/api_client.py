@@ -71,3 +71,11 @@ class ApiClient:
             url=f'/orders/{order_id}',
         )
         return self._call(request, HTTPStatus.OK)
+
+    @allure.step
+    def delete_order(self, order_id: int) -> Response:
+        request = Request(
+            method='DELETE',
+            url=f'/orders/{order_id}',
+        )
+        return self._call(request, HTTPStatus.NO_CONTENT)

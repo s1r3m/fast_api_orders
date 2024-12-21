@@ -1,4 +1,5 @@
 import allure
+from py._code.code import ExceptionInfo
 from requests import Response
 
 from trader_qa.actions.base_actions import BaseActions
@@ -28,3 +29,7 @@ class AssertionActions(BaseActions):
             'id': order.id,
             'status': order.status,
         }
+
+    @allure.step
+    def check_error_response(self, exc: ExceptionInfo, msg: str) -> None:
+        assert msg in str(exc.value)

@@ -2,6 +2,7 @@ import allure
 from requests import Response
 
 from trader_qa.actions.base_actions import BaseActions
+from trader_qa.constants import OrderStatus
 from trader_qa.qa_models import Order
 
 
@@ -20,5 +21,12 @@ class UserActions(BaseActions):
         body = response.json()
         order.id = body['id']
         self._repositories.orders.add(order)
+
+        return response
+
+    @allure.step
+    def cancel_order(self, order: Order) -> Response:
+        response = self._clients.api.delete_order(order.id)
+        order.status = OrderStatus.CANCELLED
 
         return response

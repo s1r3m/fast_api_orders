@@ -15,6 +15,7 @@ pytest-clarity = "1.0.1"
 requests = "^2.32.3"
 types-requests = "^2.32.0.20241016"
 sqlalchemy = "==1.3.*"
+pytest-lazy-fixture = "^0.6.3"
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
@@ -71,6 +72,7 @@ max-line-length = 120
 # Disable the message, report, category or checker with the given id(s).
 disable = '''
     missing-docstring,
+    redefined-outer-name,
     too-few-public-methods,
 '''
 

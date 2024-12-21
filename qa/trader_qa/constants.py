@@ -6,11 +6,11 @@ class StrEnum(str, Enum):
 
 
 # From the app.
-ORDER_EXECUTE_DELAY = 1
+ORDER_EXECUTE_DELAY = 2
 
 
 class OrderStatus(StrEnum):
-    CANCELED = 'CANCELED'
+    CANCELLED = 'CANCELLED'
     EXECUTED = 'EXECUTED'
     PENDING = 'PENDING'
 
@@ -18,7 +18,13 @@ class OrderStatus(StrEnum):
 class Stock(StrEnum):
     EURUSD = 'EURUSD'
     USDEUR = 'USDEUR'
+    NOT_EXISTING = 'NOT_EXISTING'
 
 
 class Table(StrEnum):
     ORDERS = 'orders'
+
+
+class Error(StrEnum):
+    GREATER_THAN_0 = 'Input should be greater than 0'
+    STOCK_NOT_EXISTING = 'Stocks is not of valid value'

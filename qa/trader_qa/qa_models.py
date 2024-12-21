@@ -13,6 +13,10 @@ class Order:
     def __hash__(self) -> int:
         return hash(self.id)
 
+    @classmethod
+    def from_order(cls, order: 'Order') -> 'Order':
+        return Order(stocks=order.stocks, quantity=order.quantity)
+
 
 @dataclass(slots=True)
 class Repositories:
