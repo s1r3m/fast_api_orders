@@ -34,8 +34,8 @@ filterwarnings = [
 addopts = [
     "--tb=short",
     "-vv",
-    "--alluredir", "qa/allure-results",
-    "--clean-alluredir"
+#    "--alluredir", "../allure-results",
+#    "--clean-alluredir"
 ]
 
 [tool.mypy]
