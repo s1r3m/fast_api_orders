@@ -22,9 +22,11 @@ def test_cancel_order__pending_order__order_cancelled(actions, pending_order):
     ],
 )
 def test_cancel_order__not_pending_order__error_response(actions, order):
+    status_before = order.status
     with pytest.raises(UnexpectedStatusCode) as exc:
         actions.user.cancel_order(order)
 
+    order.status = status_before
     actions.assertion.check_order(order)  # Check the order is not modified
     actions.assertion.check_error_response(
         exc, Error.ORDER_CANNOT_BE_CANCELLED_TPL.format(order_id=order.id), HTTPStatus.CONFLICT

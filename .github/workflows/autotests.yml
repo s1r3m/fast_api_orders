@@ -1,0 +1,17 @@
+name: Run autotests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: KengoTODA/actions-setup-docker-compose@v1
+      with:
+        version: '2.28.1' # the full version of `docker-compose` command
+    - name: Run autotests
+      run: make -C qa test
+    - name: Clean up
+        if: always()
+        run: make -C qa stop
