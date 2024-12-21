@@ -1,14 +1,14 @@
 from dataclasses import dataclass, field
 
-from trader_qa.constants import OrderStatus
+from trader_qa.constants import OrderStatus, Stock
 
 
 @dataclass(slots=True)
 class Order:
-    stocks: str
-    quantity: int
-    status: OrderStatus = OrderStatus.PENDING
-    id: int = 0  # Temp value
+    stocks: Stock = Stock.EURUSD
+    quantity: int = 10
+    status: OrderStatus | None = OrderStatus.PENDING
+    id: int = -1  # Temp value while not created
 
     def __hash__(self) -> int:
         return hash(self.id)

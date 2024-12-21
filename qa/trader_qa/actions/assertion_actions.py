@@ -1,8 +1,11 @@
+from http import HTTPStatus
+
 import allure
 from py._code.code import ExceptionInfo
 from requests import Response
 
 from trader_qa.actions.base_actions import BaseActions
+from trader_qa.constants import Error
 from trader_qa.qa_models import Order
 
 
@@ -31,5 +34,6 @@ class AssertionActions(BaseActions):
         }
 
     @allure.step
-    def check_error_response(self, exc: ExceptionInfo, msg: str) -> None:
-        assert msg in str(exc.value)
+    def check_error_response(self, exc: ExceptionInfo, error: Error, status_code: HTTPStatus) -> None:
+        assert f'but was {status_code}' in str(exc.value)
+        assert error in str(exc.value)
