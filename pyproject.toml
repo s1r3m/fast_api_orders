@@ -14,9 +14,6 @@ alembic = "^1.14.0"
 asyncpg = "^0.30.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
 blinker = "^1.9.0"
-requests = "^2.32.3"
-allure-pytest = "^2.13.5"
-types-requests = "^2.32.0.20241016"
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
