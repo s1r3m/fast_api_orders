@@ -13,5 +13,5 @@ jobs:
     - name: Run autotests
       run: make -C qa test
     - name: Clean up
-        if: always()
-        run: make -C qa stop
+      if: always()
+      run: make -C qa stop
