@@ -11,7 +11,7 @@ async def execute_order(order_id: int) -> None:
     async for db in get_db():
         async with db.begin():
             order = await db.get(OrderModel, order_id)
-            if order:
+            if order and order.status == OrderModel.OrderStatus.PENDING:
                 order.status = OrderModel.OrderStatus.EXECUTED
 
         await broadcast_order_status_update(order.id, order.status)

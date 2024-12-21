@@ -27,4 +27,7 @@ class Table(StrEnum):
 
 class Error(StrEnum):
     GREATER_THAN_0 = 'Input should be greater than 0'
+    ORDER_CANNOT_BE_CANCELLED_TPL = 'Order {order_id} cannot be cancelled!'
+    ORDER_NOT_FOUND_TPL = 'Order {order_id} not found!'
+    SHOULD_BE_VALID_INTEGER = 'Input should be a valid integer, unable to parse string as an integer'
     STOCK_NOT_EXISTING = 'Stocks is not of valid value'

@@ -4,7 +4,7 @@ from typing import Generator, TypeVar
 import pytest
 
 from trader_qa.actions import TraderActions
-from trader_qa.constants import ORDER_EXECUTE_DELAY, Stock
+from trader_qa.constants import ORDER_EXECUTE_DELAY, OrderStatus, Stock
 from trader_qa.qa_models import Order
 
 T = TypeVar('T')
@@ -32,6 +32,7 @@ def executed_order(actions: TraderActions) -> Order:
     actions.user.create_order(order)
     sleep(ORDER_EXECUTE_DELAY)
 
+    order.status = OrderStatus.EXECUTED
     return order
 
 
@@ -40,5 +41,12 @@ def cancelled_order(actions: TraderActions) -> Order:
     order = Order(stocks=Stock.USDEUR, quantity=100500)
     actions.user.create_order(order)
     actions.user.cancel_order(order)
+
+    return order
+
+
+@pytest.fixture
+def not_created_order() -> Order:
+    order = Order(id=123, stocks=Stock.USDEUR, quantity=1)
 
     return order

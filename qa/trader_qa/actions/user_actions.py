@@ -20,8 +20,9 @@ class UserActions(BaseActions):
         response = self._clients.api.post_order(order.stocks, order.quantity)
         body = response.json()
         order.id = body['id']
-        self._repositories.orders.add(order)
+        order.status = OrderStatus.PENDING
 
+        self._repositories.orders.add(order)
         return response
 
     @allure.step
@@ -30,3 +31,7 @@ class UserActions(BaseActions):
         order.status = OrderStatus.CANCELLED
 
         return response
+
+    @allure.step
+    def get_all_orders(self) -> Response:
+        return self._clients.api.get_orders()

@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 
 from trader_qa.clients.api_client import UnexpectedStatusCode
@@ -54,7 +56,16 @@ def test_create_order__bad_quantity__error_response(actions, quantity):
     with pytest.raises(UnexpectedStatusCode) as exc:
         actions.user.create_order(order)
 
-    actions.assertion.check_error_response(exc, Error.GREATER_THAN_0)
+    actions.assertion.check_error_response(exc, Error.GREATER_THAN_0, HTTPStatus.UNPROCESSABLE_ENTITY)
+
+
+def test_create_order__bad_type_quantity__error_response(actions):
+    bad_order = Order(quantity='bad')
+
+    with pytest.raises(UnexpectedStatusCode) as exc:
+        actions.user.create_order(bad_order)
+
+    actions.assertion.check_error_response(exc, Error.SHOULD_BE_VALID_INTEGER, HTTPStatus.UNPROCESSABLE_ENTITY)
 
 
 @pytest.mark.skip(reason='not_implemented_task_DAY-12')
@@ -64,4 +75,4 @@ def test_create_order__bad_stock__error_response(actions):
     with pytest.raises(UnexpectedStatusCode) as exc:
         actions.user.create_order(order)
 
-    actions.assertion.check_error_response(exc, Error.STOCK_NOT_EXISTING)
+    actions.assertion.check_error_response(exc, Error.STOCK_NOT_EXISTING, HTTPStatus.BAD_REQUEST)
