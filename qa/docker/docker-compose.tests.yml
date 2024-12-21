@@ -19,6 +19,6 @@ services:
           sleep 1;
         done;
         echo \nApp is ready. Starting tests...;
-        ./start_tests.sh
         ' || (echo Timeout reached! App is not ready.; exit 1)
+        ./start_tests.sh
       "

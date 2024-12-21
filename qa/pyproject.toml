@@ -14,6 +14,7 @@ pytest = "7.0.1"
 pytest-clarity = "1.0.1"
 requests = "^2.32.3"
 types-requests = "^2.32.0.20241016"
+sqlalchemy = "==1.3.*"
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
@@ -81,7 +82,7 @@ argument-rgx = '[a-z_][a-z0-9_]{1,60}$'
 function-rgx = '[a-z_][a-z0-9_]{2,115}$'
 
 # Good variable names which should always be accepted, separated by a comma.
-good-names = 'i,j,k,v,f,e,x,y,z,_,logger,pytestmark,qa,id'
+good-names = 'i,j,k,v,f,e,x,y,z,_,pytestmark,db,id'
 
 # Regular expression matching correct method names.
 method-rgx = '[a-z_][A-Za-z0-9_]{1,100}$'
