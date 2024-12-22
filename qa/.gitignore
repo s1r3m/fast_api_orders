@@ -1,0 +1,15 @@
+# IntelliJ project files
+.idea
+
+allure-report/
+
+.pytest_cache/
+__pycache__/
+
+# Environments
+.venv*
+
+# mypy
+.mypy_cache/
+
+sandbox*

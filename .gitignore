@@ -1,0 +1,12 @@
+# IntelliJ project files
+.idea
+
+# Environments
+.venv*
+
+allure-results/
+# mypy
+.mypy_cache/
+__pycache__/
+
+sandbox*
