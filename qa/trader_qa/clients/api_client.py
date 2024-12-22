@@ -20,7 +20,7 @@ def _dump_request_body(request: PreparedRequest) -> str:
         # request_body = request.body.decode() if isinstance(request.body, bytes) else request.body
         body = _pretty_json(json.loads(request.body))
     except ValueError:
-        body = request.body
+        body = request.body  # type: ignore
     return f'Body:\n{body}\n'
 
 
@@ -28,7 +28,7 @@ def _dump_response_body(response: Response) -> str:
     try:
         body = _pretty_json(response.json())
     except ValueError:
-        body = response.content
+        body = response.content  # type: ignore
     return f'Body:\n{body}\n'
 
 
