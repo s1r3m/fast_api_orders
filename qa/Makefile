@@ -106,7 +106,7 @@ gh_report:
 			-v $(PROJECT_PATH)/qa/allure-results:/app/allure-results \
 			-v $(PROJECT_PATH)/qa/allure-report:/app/allure-report \
 			-w /app \
-			allure-framework/allure-cli:2.23.0 generate
+			frankescobar/allure-docker-service generate
 
 HELP_TARGET_MAX_CHAR_NUM = 20
 
