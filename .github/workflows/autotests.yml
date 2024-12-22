@@ -22,8 +22,8 @@ jobs:
     - name: Install Allure CLI
       run: |
         curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz"
-        tar -zxvf allure.tgz -C /usr/local/lib/
-        export PATH="/usr/local/lib/allure-2.23.0/bin:$PATH"
+        tar -zxvf allure.tgz -C ${HOME}
+        export PATH="${HOME}/allure-2.23.0/bin:$PATH"
     - name: Generate Allure Report
       if: always()
       run: make -C qa gh_report
