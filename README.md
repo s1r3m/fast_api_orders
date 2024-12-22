@@ -1,6 +1,14 @@
 # FastAPI Trader
 
-This a demo project with an app and its autotests.
+This a demo project with an app and its autotests. The app runs on FastAPI in docker behind Nginx.
+Autotests are based on pytest and allure report. Run in docker, too.
+
+## To developers
+The app code is in `trader` folder. All commands are supposed to be called from root folder.
+
+Virtual environments are handled with `poetry`. To add a package: `poetry add your_package`. Don't modify manually `poetry.lock`!
+
+Aware of `qa` folder with its own `Makefile` and a separate env! 
 
 ### Usage
 The project comes with `Makefile`.
@@ -42,5 +50,12 @@ make -C qa start
 ```bash
 make -C qa test
 ```
+
+* To see Allure report locally:
+```bash
+make report
+```
+**Important**: Make sure you have installed [Allure](https://allurereport.org/docs/install/) locally on your machine to see the report!
+
 
 **Hint**: you can `cd qa/` to omit `-C qa` part of the commands above.

@@ -25,4 +25,11 @@ make start
 make test
 ```
 
+* To see Allure report locally:
+```bash
+make report
+```
+**Important**: Make sure you have installed [Allure](https://allurereport.org/docs/install/) locally on your machine to see the report!
+
+
 **Hint**: Make sure you run these commands on `qa` folder or state folder with -C: `make -C qa install`

@@ -95,6 +95,10 @@ test: stop
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests
 
+## @Tests Generate local allure report.
+report: test
+	allure serve $(PROJECT_PATH)/qa/allure-results
+
 HELP_TARGET_MAX_CHAR_NUM = 20
 
 .PHONY:
