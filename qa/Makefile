@@ -99,6 +99,15 @@ test: stop
 report: test
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
+
+## @GithubActions Generate allure report for publishing.
+gh_report:
+	curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz" && \
+	tar -zxvf allure.tgz -C $(PROJECT_PATH)
+	cd $(PROJECT_PATH)/qa/ && $(PROJECT_PATH)/allure-2.23.0/bin/allure generate -c -o $(PROJECT_PATH)/allure-report
+
+
+
 HELP_TARGET_MAX_CHAR_NUM = 20
 
 .PHONY:

@@ -10,6 +10,8 @@ Virtual environments are handled with `poetry`. To add a package: `poetry add yo
 
 Aware of `qa` folder with its own `Makefile` and a separate env! 
 
+Autotests and linters are run on every pull-request. Allure report is published to [GitHub Pages](https://s1r3m.github.io/fast_api_orders/)
+
 ### Usage
 The project comes with `Makefile`.
 
