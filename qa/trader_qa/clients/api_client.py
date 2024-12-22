@@ -1,11 +1,35 @@
+import json
+from functools import partial
 from http import HTTPStatus
+from typing import Any
 
 import allure
-from requests import Request, RequestException, Response, Session
+from requests import PreparedRequest, Request, RequestException, Response, Session
+
+_pretty_json = partial(json.dumps, ensure_ascii=True, indent=4, sort_keys=True)  # pylint: disable=invalid-name
 
 
 class UnexpectedStatusCode(RequestException):
     pass
+
+
+def _dump_request_body(request: PreparedRequest) -> str:
+    if request.body is None:
+        return ''
+    try:
+        # request_body = request.body.decode() if isinstance(request.body, bytes) else request.body
+        body = _pretty_json(json.loads(request.body))
+    except ValueError:
+        body = request.body  # type: ignore
+    return f'Body:\n{body}\n'
+
+
+def _dump_response_body(response: Response) -> str:
+    try:
+        body = _pretty_json(response.json())
+    except ValueError:
+        body = response.content  # type: ignore
+    return f'Body:\n{body}\n'
 
 
 def _truncate_text(text: str) -> str:
@@ -17,6 +41,47 @@ def _truncate_text(text: str) -> str:
     if not text or text.startswith('<html>'):
         return ''
     return text.split('\n')[-1]
+
+
+def attach_response(response: Response, *args: Any, **kwargs: Any) -> None:  # pylint: disable=unused-argument
+    # Attach request data.
+    request = response.request
+    request_dump = ''.join(
+        [
+            f'Method: {request.method}\n',
+            f'Url: "{request.url}"\n',
+            f'Headers:\n{_pretty_json(dict(request.headers))}\n',
+            _dump_request_body(request),
+        ]
+    )
+    allure.attach(
+        request_dump,
+        name=f'Request - {request.method} {request.path_url}',
+        attachment_type=allure.attachment_type.JSON,
+    )
+
+    # Attach response data.
+    response_dump = ''.join(
+        [
+            f'Url: "{response.url}"\n',
+            f'Status: {response.status_code} {response.reason}\n',
+            f'Headers:\n{_pretty_json(dict(response.headers))}\n',
+            _dump_response_body(response),
+        ]
+    )
+    allure.attach(
+        response_dump,
+        name=f'Response - {response.status_code} {request.path_url}',
+        attachment_type=allure.attachment_type.JSON,
+    )
+
+    content_type = response.headers.get('Content-Type')
+    if content_type and content_type.startswith('text/html'):
+        allure.attach(
+            response.text,
+            name=f'Response (as HTML) - {response.status_code} {request.path_url}',
+            attachment_type=allure.attachment_type.HTML,
+        )
 
 
 class ApiClient:
@@ -32,6 +97,8 @@ class ApiClient:
 
     def _call(self, request: Request, expected_status_code: HTTPStatus) -> Response:
         request.url = self._base_url + request.url
+
+        request.hooks = dict(response=attach_response)
 
         prepared_request = self.session.prepare_request(request)
         response = self.session.send(prepared_request, verify=False)

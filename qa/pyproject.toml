@@ -8,7 +8,6 @@ readme = "./README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11"
-allure-pytest = "^2.13.5"
 psycopg2-binary = "^2.9.10"
 pytest = "7.0.1"
 pytest-clarity = "1.0.1"
@@ -16,6 +15,7 @@ requests = "^2.32.3"
 types-requests = "^2.32.0.20241016"
 sqlalchemy = "==1.3.*"
 pytest-lazy-fixture = "^0.6.3"
+allure-pytest = "^2.13.5"
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"
