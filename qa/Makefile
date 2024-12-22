@@ -90,6 +90,7 @@ style: $(VENV_ACTIVATE)
 
 ## @Tests Run autotests.
 test: stop
+	rm -rf $(PROJECT_PATH)/qa/allure-results && mkdir -p $(PROJECT_PATH)/qa/allure-results
 	cd $(PROJECT_PATH)/qa/docker        && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests

@@ -9,8 +9,8 @@ services:
     environment:
       - APP_HOST=http://app.dev.local
       - DATABASE_URL=postgresql://trader:trader@db/trader
-    ports:
-      - "80:80"
+    volumes:
+      - ./../allure-results:/qa/allure-results
     command: |
       sh -c "
         timeout 10s bash -c '

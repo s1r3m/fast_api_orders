@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -ex
 
-poetry run pytest tests --alluredir allure-results --clean-alluredir
+poetry run pytest --alluredir allure-results tests
