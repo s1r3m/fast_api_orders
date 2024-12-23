@@ -100,19 +100,12 @@ report: test
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
 
-## @GithubActions Install allure to generate report
-(PROJECT_PATH)/allure-2.23.0/bin/allure:
+## @GithubActions Generate allure report for publishing.
+gh_report:
 	curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz" && \
 	tar -zxvf allure.tgz -C $(PROJECT_PATH)
-
-## @GithubActions Generate allure report for publishing.
-gh_report: (PROJECT_PATH)/allure-2.23.0/bin/allure
 	cd $(PROJECT_PATH)/qa/ && $(PROJECT_PATH)/allure-2.23.0/bin/allure generate -c -o $(PROJECT_PATH)/allure-report
 
-
-## @GithubActions Generate index.html for Github Pages with tests' python
-gh_index:
-	$(PYTHON) $(PROJECT_PATH)/qa/scripts/generate_index.py
 
 
 HELP_TARGET_MAX_CHAR_NUM = 20
