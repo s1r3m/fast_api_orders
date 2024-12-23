@@ -100,12 +100,20 @@ report: test
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
 
-## @GithubActions Generate allure report for publishing.
-gh_report:
+## @GithubActions Install allure to generate report
+(PROJECT_PATH)/allure-2.23.0/bin/allure:
 	curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz" && \
 	tar -zxvf allure.tgz -C $(PROJECT_PATH)
+
+## @GithubActions Generate allure report for publishing.
+gh_report: (PROJECT_PATH)/allure-2.23.0/bin/allure
 	cd $(PROJECT_PATH)/qa/ && $(PROJECT_PATH)/allure-2.23.0/bin/allure generate -c -o $(PROJECT_PATH)/allure-report
 
+
+## @GithubActions Generate index.html for Github Pages with tests' python
+gh_index:
+	cd $(PROJECT_PATH)/qa/docker        && \
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests bash -c "python scripts/generate_index.py"
 
 
 HELP_TARGET_MAX_CHAR_NUM = 20
