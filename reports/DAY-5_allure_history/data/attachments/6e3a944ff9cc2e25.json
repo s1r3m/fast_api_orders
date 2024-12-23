@@ -1,0 +1,27 @@
+Url: "http://app.dev.local/orders"
+Status: 422 Unprocessable Entity
+Headers:
+{
+    "Connection": "keep-alive",
+    "Content-Length": "126",
+    "Content-Type": "application/json",
+    "Date": "Mon, 23 Dec 2024 12:37:12 GMT",
+    "Server": "nginx/1.22.1"
+}
+Body:
+{
+    "detail": [
+        {
+            "ctx": {
+                "gt": 0
+            },
+            "input": 0,
+            "loc": [
+                "body",
+                "quantity"
+            ],
+            "msg": "Input should be greater than 0",
+            "type": "greater_than"
+        }
+    ]
+}

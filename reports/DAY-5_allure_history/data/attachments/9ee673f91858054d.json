@@ -1,0 +1,17 @@
+Url: "http://app.dev.local/orders/18"
+Status: 200 OK
+Headers:
+{
+    "Connection": "keep-alive",
+    "Content-Length": "61",
+    "Content-Type": "application/json",
+    "Date": "Mon, 23 Dec 2024 12:37:20 GMT",
+    "Server": "nginx/1.22.1"
+}
+Body:
+{
+    "id": 18,
+    "quantity": 100,
+    "status": "PENDING",
+    "stocks": "EURUSD"
+}
