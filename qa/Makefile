@@ -21,6 +21,7 @@ VIRTUAL_ENV_POETRY = $(PROJECT_PATH)/.venv_at_poetry
 # Bin.
 VENV_ACTIVATE = $(VIRTUAL_ENV)/bin/activate
 VENV_POETRY_ACTIVATE = $(VIRTUAL_ENV_POETRY)/bin/activate
+ALLURE = $(PROJECT_PATH)/allure-2.23.0/bin/allure
 
 # Other.
 SHELL = /bin/bash  # Using bash as default shell
@@ -90,6 +91,7 @@ style: $(VENV_ACTIVATE)
 
 ## @Tests Run autotests.
 test: stop
+	mv
 	rm -rf $(PROJECT_PATH)/qa/allure-results && mkdir -p $(PROJECT_PATH)/qa/allure-results
 	cd $(PROJECT_PATH)/qa/docker        && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
@@ -100,13 +102,14 @@ report: test
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
 
-## @GitHubActions Generate allure report for publishing.
-gh_report:
+## @GitHubActions Install allure to generate report
+$(ALLURE):
 	curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz" && \
 	tar -zxvf allure.tgz -C $(PROJECT_PATH)
-	cd $(PROJECT_PATH)/qa/ && $(PROJECT_PATH)/allure-2.23.0/bin/allure generate -c -o $(PROJECT_PATH)/allure-report
 
-
+## @GitHubActions Generate allure report for publishing.
+gh_report: $(ALLURE)
+	cd $(PROJECT_PATH)/qa/ && $(ALLURE) generate -c -o $(PROJECT_PATH)/allure-report
 
 HELP_TARGET_MAX_CHAR_NUM = 20
 
