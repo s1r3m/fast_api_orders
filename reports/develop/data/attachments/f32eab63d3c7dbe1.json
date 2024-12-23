@@ -1,0 +1,14 @@
+Url: "http://app.dev.local/orders/3"
+Status: 409 Conflict
+Headers:
+{
+    "Connection": "keep-alive",
+    "Content-Length": "41",
+    "Content-Type": "application/json",
+    "Date": "Mon, 23 Dec 2024 12:40:30 GMT",
+    "Server": "nginx/1.22.1"
+}
+Body:
+{
+    "detail": "Order 3 cannot be cancelled!"
+}
