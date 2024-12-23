@@ -6,7 +6,6 @@ from operator import attrgetter, itemgetter
 import allure
 from pytest import ExceptionInfo
 from requests import Response
-from websockets.asyncio.client import ClientConnection
 
 from trader_qa.actions.base_actions import BaseActions
 from trader_qa.constants import Error, WS_TIMEOUT
