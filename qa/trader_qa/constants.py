@@ -18,6 +18,7 @@ class OrderStatus(StrEnum):
 class Stock(StrEnum):
     EURUSD = 'EURUSD'
     USDEUR = 'USDEUR'
+    RUREUR = 'RUREUR'
     NOT_EXISTING = 'NOT_EXISTING'
 
 
