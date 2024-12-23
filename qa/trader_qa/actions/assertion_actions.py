@@ -1,9 +1,11 @@
+import asyncio
 from http import HTTPStatus
 from operator import attrgetter, itemgetter
 
 import allure
-from py._code.code import ExceptionInfo
+from pytest import ExceptionInfo
 from requests import Response
+from websockets.asyncio.client import ClientConnection
 
 from trader_qa.actions.base_actions import BaseActions
 from trader_qa.constants import Error
@@ -56,3 +58,19 @@ class AssertionActions(BaseActions):
                 'quantity': expected_order.quantity,
                 'status': expected_order.status,
             }
+
+    @allure.step
+    async def check_ws_messages(self, ws_client: ClientConnection, order: Order) -> None:
+        received_messages = []
+        expected_messages = order.expected_ws_messages()
+        allure.attach(expected_messages, 'expected_messages', allure.attachment_type.TEXT)
+        for _ in expected_messages:
+            try:
+                message = await ws_client.recv()
+                received_messages.append(message)
+            except asyncio.TimeoutError as exc:
+                raise AssertionError(
+                    f'Not enough messages received:\n{received_messages}\n{expected_messages=}'
+                ) from exc
+        allure.attach(received_messages, 'received_messages', allure.attachment_type.TEXT)
+        assert received_messages == expected_messages

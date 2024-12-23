@@ -21,6 +21,8 @@ jobs:
           git checkout origin/gh-pages -- reports/${GITHUB_REF_NAME}/history
           mkdir -p allure-results/history
           cp -r reports/${GITHUB_REF_NAME}/history/* allure-results/history/
+          echo "History folder copied!"
+          ls -la allure-results/history/
         else
           echo "No history folder found for ${GITHUB_REF_NAME} in gh-pages."
         fi
