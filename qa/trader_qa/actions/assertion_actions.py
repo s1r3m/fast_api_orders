@@ -63,6 +63,7 @@ class AssertionActions(BaseActions):
     async def check_ws_messages(self, ws_client: ClientConnection, order: Order) -> None:
         received_messages = []
         expected_messages = order.expected_ws_messages()
+        allure.attach(expected_messages, 'expected_messages', allure.attachment_type.TEXT)
         for _ in expected_messages:
             try:
                 message = await ws_client.recv()
@@ -71,4 +72,5 @@ class AssertionActions(BaseActions):
                 raise AssertionError(
                     f'Not enough messages received:\n{received_messages}\n{expected_messages=}'
                 ) from exc
+        allure.attach(received_messages, 'received_messages', allure.attachment_type.TEXT)
         assert received_messages == expected_messages
