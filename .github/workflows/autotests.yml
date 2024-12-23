@@ -6,11 +6,25 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-
     - uses: KengoTODA/actions-setup-docker-compose@v1
       with:
         version: '2.28.1' # the full version of `docker-compose` command
+
+    - uses: actions/checkout@v4
+
+    - name: Fetch gh-pages Branch
+      run: git fetch origin gh-pages
+
+    - name: Retrieve Allure History
+      run: |
+        if git cat-file -e origin/gh-pages:reports/${GITHUB_REF_NAME}/history; then
+          git checkout origin/gh-pages -- reports/${GITHUB_REF_NAME}/history
+          mkdir -p allure-results/history
+          cp -r reports/${GITHUB_REF_NAME}/history/* allure-results/history/
+        else
+          echo "No history folder found for ${GITHUB_REF_NAME} in gh-pages."
+        fi
+
 
     - name: Run autotests
       run: make -C qa test
