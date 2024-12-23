@@ -2,19 +2,19 @@ name: Run autotests
 
 on: [push]
 
-permissions:
-  contents: write
-
 jobs:
-  build:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
     - uses: KengoTODA/actions-setup-docker-compose@v1
       with:
         version: '2.28.1' # the full version of `docker-compose` command
+
     - name: Run autotests
       run: make -C qa test
+
     - name: Clean up
       if: always()
       run: make -C qa stop
@@ -22,14 +22,38 @@ jobs:
     - name: Generate Allure Report
       if: always()
       run: make -C qa gh_report
-    - name: Deploy to GitHub Pages
-      if: always()
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        git checkout --orphan gh-pages
-        rm -rf .github/
-        mv allure-report/* ./
-        git add .
-        git commit -m "Deploy Allure report"
-        git push -f origin gh-pages
+
+    - name: Publish Allure Report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-report
+        destination_dir: reports/${{ github.ref_name }}
+        keep_files: true
+
+  update-index:
+    name: Update Allure Index Page
+    runs-on: ubuntu-latest
+    needs: run-tests
+
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Generate Index Page
+        run: |
+          make -C qa gh_index
+
+      - name: Commit and Push Updated Index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit. Skipping."
+          else
+            git commit -am "Update Allure index page"
+            git push
+          fi
