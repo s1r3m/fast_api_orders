@@ -9,7 +9,7 @@ from requests import Response
 from websockets.asyncio.client import ClientConnection
 
 from trader_qa.actions.base_actions import BaseActions
-from trader_qa.constants import Error
+from trader_qa.constants import Error, WS_TIMEOUT
 from trader_qa.qa_models import Order
 
 
@@ -61,13 +61,13 @@ class AssertionActions(BaseActions):
             }
 
     @allure.step
-    async def check_ws_messages(self, ws_client: ClientConnection, order: Order) -> None:
+    async def check_ws_messages(self, client_messages: asyncio.Queue, order: Order) -> None:
         received_messages = []
         expected_messages = order.expected_ws_messages()
         allure.attach(json.dumps(expected_messages), 'expected_messages', allure.attachment_type.JSON)
         for _ in expected_messages:
             try:
-                message = await ws_client.recv()
+                message = await asyncio.wait_for(client_messages.get(), WS_TIMEOUT)
                 received_messages.append(message)
             except asyncio.TimeoutError as exc:
                 raise AssertionError(
