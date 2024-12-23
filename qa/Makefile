@@ -111,8 +111,8 @@ gh_report: $(ALLURE)
 	cd $(PROJECT_PATH)/qa/ && $(ALLURE) generate -c -o $(PROJECT_PATH)/allure-report
 
 ## @GithubActions Generate index.html for Github Pages with tests' python
-gh_index:
-	$(PYTHON) $(PROJECT_PATH)/qa/scripts/generate_index.py
+gh_index: $(VENV_ACTIVATE)
+	python $(PROJECT_PATH)/qa/scripts/generate_index.py
 
 
 HELP_TARGET_MAX_CHAR_NUM = 20
