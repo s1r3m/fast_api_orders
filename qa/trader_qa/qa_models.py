@@ -17,6 +17,23 @@ class Order:
     def from_order(cls, order: 'Order') -> 'Order':
         return Order(stocks=order.stocks, quantity=order.quantity)
 
+    def expected_ws_messages(self) -> list[str]:
+        match self.status:
+            case OrderStatus.PENDING:
+                return [f'Order {self.id} status updated to {OrderStatus.PENDING}']
+            case OrderStatus.CANCELLED:
+                return [
+                    f'Order {self.id} status updated to {OrderStatus.PENDING}'
+                    f'Order {self.id} status updated to {OrderStatus.CANCELLED}',
+                ]
+            case OrderStatus.EXECUTED:
+                return [
+                    f'Order {self.id} status updated to {OrderStatus.PENDING}'
+                    f'Order {self.id} status updated to {OrderStatus.EXECUTED}',
+                ]
+            case _:
+                return []
+
 
 @dataclass(slots=True)
 class Repositories:
