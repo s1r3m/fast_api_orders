@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+from pytest_lazy_fixtures import lf as lazy_fixture
 
 from trader_qa.clients.api_client import UnexpectedStatusCode
 from trader_qa.constants import Error, Stock
@@ -29,9 +30,9 @@ def test_create_order__second_order__order_created(actions):
 @pytest.mark.parametrize(
     'order',
     [
-        pytest.lazy_fixture('pending_order'),
-        pytest.lazy_fixture('executed_order'),
-        pytest.lazy_fixture('cancelled_order'),
+        lazy_fixture('pending_order'),
+        lazy_fixture('executed_order'),
+        lazy_fixture('cancelled_order'),
     ],
 )
 def test_create_order__same_data__order_created(actions, order):

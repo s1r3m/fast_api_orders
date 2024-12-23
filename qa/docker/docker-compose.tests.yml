@@ -7,7 +7,7 @@ services:
       - app
       - db
     environment:
-      - APP_HOST=http://app.dev.local
+      - HOST=app.dev.local
       - DATABASE_URL=postgresql://trader:trader@db/trader
     volumes:
       - ./../allure-results:/qa/allure-results
