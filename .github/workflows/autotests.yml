@@ -54,15 +54,18 @@ jobs:
 
     steps:
       - name: Checkout gh-pages branch
+        if: always()
         uses: actions/checkout@v4
         with:
           ref: gh-pages
 
       - name: Generate Index Page
+        if: always()
         run: |
           make -C qa gh_index
 
       - name: Commit and Push Updated Index
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
