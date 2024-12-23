@@ -3,7 +3,8 @@ from pathlib import Path
 REPORT_DIR = Path() / 'reports'
 INDEX_FILE = Path('index.html')
 
-def main():
+
+def main() -> None:
     if not REPORT_DIR.exists():
         print(f'{REPORT_DIR} directory does not exist.')
         return
@@ -16,6 +17,7 @@ def main():
             f.write(f'<li><a href="{report}/index.html">{report}</a></li>')
         f.write('</ul></body></html>')
     print(f'Index generated: {INDEX_FILE}')
+
 
 if __name__ == '__main__':
     main()

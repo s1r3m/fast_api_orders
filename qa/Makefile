@@ -113,7 +113,7 @@ gh_report: (PROJECT_PATH)/allure-2.23.0/bin/allure
 ## @GithubActions Generate index.html for Github Pages with tests' python
 gh_index:
 	cd $(PROJECT_PATH)/qa/docker        && \
-		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests bash -c "python scripts/generate_index.py"
+		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests bash -c "python qa/scripts/generate_index.py"
 
 
 HELP_TARGET_MAX_CHAR_NUM = 20
