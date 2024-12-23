@@ -23,12 +23,12 @@ class Order:
                 return [f'Order {self.id} status updated to {OrderStatus.PENDING}']
             case OrderStatus.CANCELLED:
                 return [
-                    f'Order {self.id} status updated to {OrderStatus.PENDING}'
+                    f'Order {self.id} status updated to {OrderStatus.PENDING}',
                     f'Order {self.id} status updated to {OrderStatus.CANCELLED}',
                 ]
             case OrderStatus.EXECUTED:
                 return [
-                    f'Order {self.id} status updated to {OrderStatus.PENDING}'
+                    f'Order {self.id} status updated to {OrderStatus.PENDING}',
                     f'Order {self.id} status updated to {OrderStatus.EXECUTED}',
                 ]
             case _:

@@ -15,10 +15,10 @@ services:
       sh -c "
         timeout 10s bash -c '
         until curl -fs http://app/ping; do
-          echo Waiting for app...;
+          echo Waiting for the app...;
           sleep 1;
         done;
-        echo App is ready. Starting tests...;
-        ' || (echo Timeout reached! App is not ready.; exit 1)
+        echo The app is ready. Starting tests...;
+        ' || (echo Timeout reached! The app is not ready.; exit 1)
         ./start_tests.sh
       "
