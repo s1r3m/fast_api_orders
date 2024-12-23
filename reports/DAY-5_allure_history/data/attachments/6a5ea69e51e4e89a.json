@@ -1,0 +1,24 @@
+Url: "http://app.dev.local/orders/bad"
+Status: 422 Unprocessable Entity
+Headers:
+{
+    "Connection": "keep-alive",
+    "Content-Length": "153",
+    "Content-Type": "application/json",
+    "Date": "Mon, 23 Dec 2024 12:32:58 GMT",
+    "Server": "nginx/1.22.1"
+}
+Body:
+{
+    "detail": [
+        {
+            "input": "bad",
+            "loc": [
+                "path",
+                "order_id"
+            ],
+            "msg": "Input should be a valid integer, unable to parse string as an integer",
+            "type": "int_parsing"
+        }
+    ]
+}
