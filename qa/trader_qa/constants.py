@@ -1,5 +1,7 @@
 from enum import Enum
 
+WS_TIMEOUT = 5
+
 
 class StrEnum(str, Enum):
     """Enum where every value is also a string."""

@@ -96,8 +96,8 @@ test: stop
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml build --pull  && \
 		docker-compose -f docker-compose.yml -f docker-compose.tests.yml run tests
 
-## @Tests Generate local allure report.
-report: test
+## @Tests Generate local allure report from the previous run.
+report:
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
 
