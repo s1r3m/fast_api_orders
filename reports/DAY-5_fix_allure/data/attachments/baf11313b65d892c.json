@@ -1,0 +1,11 @@
+Url: "http://app.dev.local/orders/14"
+Status: 204 No Content
+Headers:
+{
+    "Connection": "keep-alive",
+    "Content-Type": "application/json",
+    "Date": "Mon, 23 Dec 2024 09:09:49 GMT",
+    "Server": "nginx/1.22.1"
+}
+Body:
+b''
