@@ -100,7 +100,7 @@ report: test
 	allure serve $(PROJECT_PATH)/qa/allure-results
 
 
-## @GithubActions Generate allure report for publishing.
+## @GitHubActions Generate allure report for publishing.
 gh_report:
 	curl -o allure.tgz -L "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.23.0/allure-commandline-2.23.0.tgz" && \
 	tar -zxvf allure.tgz -C $(PROJECT_PATH)

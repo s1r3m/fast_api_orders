@@ -2,7 +2,7 @@
 
 This a demo project with autotests to the FastAPI Trader app.
 
-[Last Allure Report](https://s1r3m.github.io/fast_api_orders/) on GitHub Pages.
+Allure reports are published to [GitHub Pages](https://s1r3m.github.io/fast_api_orders/).
 
 ### Usage
 The project comes with `Makefile`.
