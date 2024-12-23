@@ -1,0 +1,9 @@
+Method: GET
+Url: "http://app.dev.local/orders/3"
+Headers:
+{
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
+    "User-Agent": "python-requests/2.32.3"
+}
